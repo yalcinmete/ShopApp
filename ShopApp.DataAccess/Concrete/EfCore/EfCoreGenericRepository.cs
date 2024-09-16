@@ -65,6 +65,6 @@ namespace ShopApp.DataAccess.Concrete.EfCore
             }
         }
     }
-    {
-    }
+    
+    
 }
