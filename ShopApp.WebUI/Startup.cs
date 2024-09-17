@@ -6,7 +6,6 @@ using ShopApp.Business.Abstract;
 using ShopApp.Business.Concrete;
 using ShopApp.DataAccess.Abstract;
 using ShopApp.DataAccess.Concrete.EfCore;
-using ShopApp.DataAccess.Concrete.Memory;
 using ShopApp.WebUI.Middlewares;
 using System;
 using System.Collections.Generic;
@@ -24,7 +23,9 @@ namespace ShopApp.WebUI
             //IProductService çağrıldığında ProductManager çağrılacak,  ProductManager de içindeki IProductDal'ı çağırdığında MemoryProductDal çağrılmış olucak.
             //services.AddScoped<IProductDal, MemoryProductDal>();  //IProductDal teknolojisi değişirse ,
             services.AddScoped<IProductDal, EfCoreProductDal>();  //IProductDal teknolojisi değişirse ,
+            services.AddScoped<ICategoryDal, EfCoreCategoryDal>();  //IProductDal teknolojisi değişirse ,
             services.AddScoped<IProductService, ProductManager>(); //IProductService business katmanı değişirse,
+            services.AddScoped<ICategoryService, CategoryManager>(); //IProductService business katmanı değişirse,
 
             services.AddMvc()
                 .SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_1);
@@ -46,7 +47,21 @@ namespace ShopApp.WebUI
 
             app.UseStaticFiles(); //wwwroot'u dışarıya açar.
             app.CustomStaticFiles(); //node_modules klasörünü dışarı açtık.
-            app.UseMvcWithDefaultRoute(); //controller action ve id parametresi isteğe bağlı.
+
+            //app.UseMvcWithDefaultRoute(); //controller action ve id parametresi isteğe bağlı.
+
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "products",
+                    template: "products/{category?}",
+                    defaults: new { controller = "Shop", action = "List" } //Kullanıcı /products giderse defaults çalışır.
+                    );
+
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
+            });
         }
     }
 }
