@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ShopApp.Business.Abstract;
+using ShopApp.Entities;
 using ShopApp.WebUI.Models;
 
 namespace ShopApp.WebUI.Controllers
@@ -12,9 +13,18 @@ namespace ShopApp.WebUI.Controllers
         {
             _productService = productService;
         }
-        public IActionResult Index()
+        public IActionResult Details(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return NotFound();
+            }
+            Product product = _productService.GetById((int)id);
+            if (product == null) 
+            {
+                return NotFound();  
+            }
+            return View(product);
         }
 
         public IActionResult List()
