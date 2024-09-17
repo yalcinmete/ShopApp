@@ -30,7 +30,7 @@ namespace ShopApp.DataAccess.Concrete.EfCore
 
         //IQueryable<T> de çağırabilirsin ama implemente ettiği classta toList() i çağırmak zorundasın.Biz bu zorunlugu kaldırmak için burada IEnumerable döndürüp tolist()i burada çağırıyoruz.
         //public IQueryable<T> GetAll(Expression<Func<T, bool>> filter = null)
-        public IEnumerable<T> GetAll(Expression<Func<T, bool>> filter = null)
+        public List<T> GetAll(Expression<Func<T, bool>> filter = null)
         {
             using (var context = new TContext())
             {

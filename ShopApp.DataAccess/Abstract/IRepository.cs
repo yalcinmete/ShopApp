@@ -14,7 +14,8 @@ namespace ShopApp.DataAccess.Abstract
 
         //IQueryable<T> dönersen en sonunda database'e işlem tamamlanması için Tolist()dönmek zorundasın.
         //IQueryable<T> GetAll(Expression<Func<T, bool>> filter = null);
-        IEnumerable<T> GetAll(Expression<Func<T, bool>> filter = null);
+        //IEnumerable<T> GetAll(Expression<Func<T, bool>> filter = null);
+        List<T> GetAll(Expression<Func<T, bool>> filter = null);
 
         void Create(T entity);
         void Update(T entity);
