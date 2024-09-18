@@ -18,6 +18,7 @@ namespace ShopApp.WebUI.ViewComponents
             //return View(_categoryService.GetAll());  
             return View(new CategoryListViewModel()
             {
+                SelectedCategory = RouteData.Values["category"]?.ToString(), //category değeri null gelirse stringe çeviremez hata verir bu nedenle soru işareti koyduk(null değilse)
                 Categories = _categoryService.GetAll()
             });  
         }
