@@ -46,14 +46,15 @@ namespace ShopApp.WebUI.Controllers
         }
 
         [HttpGet]
-        public IActionResult EditProduct(int? id)
+        public IActionResult EditProduct(int? id )
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var entity = _productService.GetById((int)id);
+            //var entity = _productService.GetById((int)id);
+            var entity = _productService.GetByIdWithCategories((int)id);
 
             if (entity == null)
             {
@@ -67,12 +68,17 @@ namespace ShopApp.WebUI.Controllers
                 Price = entity.Price,
                 Description = entity.Description,
                 ImageUrl = entity.ImageUrl,
+
+                SelectedCategories = entity.ProductCategories.Select(i=>i.Category).ToList()
             };
+
+            //Yukarıda ProductModel içinde de tüm categorileri iletebilirdik ama Modeli çok kirletmemek için ViewBag ile gönderdik. 
+            ViewBag.Categories = _categoryService.GetAll();
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult EditProduct(ProductModel model)
+        public IActionResult EditProduct(ProductModel model, int[] categoryIds)
         {
             var entity = _productService.GetById(model.Id);
             if (entity ==null)
@@ -84,7 +90,7 @@ namespace ShopApp.WebUI.Controllers
             entity.ImageUrl = model.ImageUrl;
             entity.Price = model.Price;
 
-            _productService.Update(entity);
+            _productService.Update(entity, categoryIds);
             return RedirectToAction("ProductList");
         }
 
