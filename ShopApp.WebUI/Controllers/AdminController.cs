@@ -2,19 +2,22 @@
 using ShopApp.Business.Abstract;
 using ShopApp.Entities;
 using ShopApp.WebUI.Models;
+using System.Linq;
 
 namespace ShopApp.WebUI.Controllers
 {
     public class AdminController : Controller
     {
         private IProductService _productService;
+        private ICategoryService _categoryService;
 
-        public AdminController(IProductService productService)
+        public AdminController(IProductService productService, ICategoryService categoryService)
         {
             _productService = productService;
+            _categoryService = categoryService;
         }
 
-        public IActionResult Index()
+        public IActionResult ProductList()
         {
             return View(new ProductListModel()
             {
@@ -39,11 +42,11 @@ namespace ShopApp.WebUI.Controllers
                 ImageUrl = model.ImageUrl,
             };
             _productService.Create(entity);
-            return RedirectToAction("Index");
+            return RedirectToAction("ProductList");
         }
 
         [HttpGet]
-        public IActionResult Edit(int? id)
+        public IActionResult EditProduct(int? id)
         {
             if (id == null)
             {
@@ -69,7 +72,7 @@ namespace ShopApp.WebUI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(ProductModel model)
+        public IActionResult EditProduct(ProductModel model)
         {
             var entity = _productService.GetById(model.Id);
             if (entity ==null)
@@ -82,11 +85,11 @@ namespace ShopApp.WebUI.Controllers
             entity.Price = model.Price;
 
             _productService.Update(entity);
-            return RedirectToAction("Index");
+            return RedirectToAction("ProductList");
         }
 
         [HttpPost]
-        public IActionResult Delete(int productId) 
+        public IActionResult DeleteProduct(int productId) 
         {
             var entity = _productService.GetById(productId);
 
@@ -95,8 +98,88 @@ namespace ShopApp.WebUI.Controllers
                 _productService.Delete(entity);
 
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("ProductList");
 
+        }
+
+        public IActionResult CategoryList()
+        {
+            return View(new CategoryListModel
+            {
+                Categories = _categoryService.GetAll()
+            });
+        }
+
+
+        [HttpGet]
+        public IActionResult CreateCategory()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult CreateCategory(CategoryModel model)
+        {
+            var entity = new Category()
+            {
+                Name = model.Name,
+            };
+
+            _categoryService.Create(entity);
+            return RedirectToAction("CategoryList");
+        }
+
+        [HttpGet]
+        public IActionResult EditCategory(int id )
+        {
+            //var entity = _categoryService.GetById(id);
+            var entity = _categoryService.GetByWihProducts(id);
+            return View(new CategoryModel()
+            {
+                Id= entity.Id,
+                Name =entity.Name,
+                Products = entity.ProductCategories.Select(p=>p.Product).ToList()
+            });
+
+            
+        }
+
+        [HttpPost]
+        public IActionResult EditCategory(CategoryModel model)
+        {
+            var entity = _categoryService.GetById(model.Id);
+            if (entity == null)
+            {
+                return NotFound();
+            }
+            entity.Name = model.Name;
+            _categoryService.Update(entity);
+
+            return RedirectToAction("CategoryList");
+        }
+
+        [HttpPost]
+        public IActionResult DeleteCategory(int categoryId)
+        {
+            var entity = _categoryService.GetById(categoryId);
+
+            if (entity != null)
+            {
+                _categoryService.Delete(entity);
+
+            }
+            return RedirectToAction("CategoryList");
+
+        }
+
+        [HttpPost]
+        public IActionResult DeleteFromCategory(int categoryId, int productId)
+        {
+            //Databaseden ürünü silmiyoruz. ProductCategory tablosundan ilişkili categoryId productId satırını siliyoruz.
+            _categoryService.DeleteFromCategory(categoryId, productId);
+
+            //işlem tamamlandıktan sonra bizi aynı sayfaya (categoryıd ile gitmiş olduğumuz sayfaya) geri getirsin.
+            return Redirect("/admin/editcategory/"+ categoryId);
         }
     }
 }

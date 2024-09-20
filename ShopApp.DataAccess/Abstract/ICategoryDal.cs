@@ -7,8 +7,9 @@ using System.Text;
 
 namespace ShopApp.DataAccess.Abstract
 {
-    public interface ICategoryDal: IRepository<Category>
+    public interface ICategoryDal : IRepository<Category>
     {
-
+        void DeleteFromCategory(int categoryId, int productId);
+        Category GetByIdWithProducts(int id);
     }
 }
