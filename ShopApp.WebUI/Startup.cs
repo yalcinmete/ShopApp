@@ -1,11 +1,15 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ShopApp.Business.Abstract;
 using ShopApp.Business.Concrete;
 using ShopApp.DataAccess.Abstract;
 using ShopApp.DataAccess.Concrete.EfCore;
+using ShopApp.WebUI.Identity;
 using ShopApp.WebUI.Middlewares;
 using System;
 using System.Collections.Generic;
@@ -18,8 +22,23 @@ namespace ShopApp.WebUI
     {
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+
+        public IConfiguration Configuration { get; set; }
+
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<ApplicationIdentityDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("IdentityConnection")));
+
+            services.AddIdentity<ApplicationUser,IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationIdentityDbContext>()
+                .AddDefaultTokenProviders();
+
             //IProductService çağrıldığında ProductManager çağrılacak,  ProductManager de içindeki IProductDal'ı çağırdığında MemoryProductDal çağrılmış olucak.
             //services.AddScoped<IProductDal, MemoryProductDal>();  //IProductDal teknolojisi değişirse ,
             services.AddScoped<IProductDal, EfCoreProductDal>();  //IProductDal teknolojisi değişirse ,
@@ -49,6 +68,8 @@ namespace ShopApp.WebUI
             app.CustomStaticFiles(); //node_modules klasörünü dışarı açtık.
 
             //app.UseMvcWithDefaultRoute(); //controller action ve id parametresi isteğe bağlı.
+
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {

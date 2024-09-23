@@ -18,7 +18,7 @@ namespace ShopApp.WebUI.Models
         //Decimal değeri ? koymazsan direkt 0 olarak atama yapar.Requied anlamsız olur.Bu nedenle ? koyalım.
         public decimal? Price { get; set; }
         [Required]
-        [StringLength(100, MinimumLength = 20, ErrorMessage = "Ürün açıklaması minimum 20 karakter en fazla 100 karakter olmalı.")]
+        [StringLength(10000, MinimumLength = 20, ErrorMessage = "Ürün açıklaması minimum 20 karakter en fazla 100 karakter olmalı.")]
         public string Description { get; set; }
 
         //Bu product için seçilen categoriler anlamında SelectedCategories isimlendirmesi yapalım.
