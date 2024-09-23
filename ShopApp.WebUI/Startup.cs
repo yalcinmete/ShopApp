@@ -46,7 +46,7 @@ namespace ShopApp.WebUI
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = true;
                 options.Password.RequiredLength = 6;
-                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = true;
 
                 options.Lockout.MaxFailedAccessAttempts = 5;
@@ -56,7 +56,8 @@ namespace ShopApp.WebUI
                 // options.User.AllowedUserNameCharacters = "";
                 options.User.RequireUniqueEmail = true;
 
-                options.SignIn.RequireConfirmedEmail = true;
+                //kullanıcı mail confirm şimdilik false cekiyoruz daha sonradan kullanıcıya mail gönderip hesabını onaylamasını söyleyeceğiz.
+                options.SignIn.RequireConfirmedEmail = false;
                 options.SignIn.RequireConfirmedPhoneNumber = false;
             });
 
