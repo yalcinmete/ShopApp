@@ -43,8 +43,12 @@ namespace ShopApp.WebUI.Controllers
                     Description = model.Description,
                     ImageUrl = model.ImageUrl,
                 };
-                _productService.Create(entity);
-                return RedirectToAction("ProductList");
+                if ( _productService.Create(entity))
+                {
+                    return RedirectToAction("ProductList");
+                }
+                ViewBag.ErrorMessage = _productService.ErrorMessage;
+                return View(model);
             }
             return View(model);           
         }

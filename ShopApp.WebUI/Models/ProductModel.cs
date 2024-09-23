@@ -8,8 +8,8 @@ namespace ShopApp.WebUI.Models
     {
         public int Id { get; set; }
 
-        [Required]
-        [StringLength(60,MinimumLength =10,ErrorMessage ="Ürün ismi minimum 10 karakter en fazla 60 karakter olmalı.")]
+        //[Required]
+        //[StringLength(60,MinimumLength =10,ErrorMessage ="Ürün ismi minimum 10 karakter en fazla 60 karakter olmalı.")]
         public string Name { get; set; }
         [Required]
         public string ImageUrl { get; set; }
