@@ -53,39 +53,52 @@ namespace ShopApp.WebUI.Controllers
             return View(model);
         }
 
-        public IActionResult Login()
+        public IActionResult Login(string ReturnUrl = null)
         {
-            return View(new LoginModel());
+
+            return View(new LoginModel()
+            {
+                 ReturnUrl = ReturnUrl
+            });
         }
 
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginModel model, string returnUrl = null)
+        public async Task<IActionResult> Login(LoginModel model)
         {
-            returnUrl = returnUrl ?? "~/";
 
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
-            var user = await _userManager.FindByNameAsync(model.Username);
+            //var user = await _userManager.FindByNameAsync(model.Username);
+            var user = await _userManager.FindByEmailAsync(model.Email);
 
             if (user == null)
             {
-                ModelState.AddModelError("", "Bu kullanıcı ile daha önce hesap oluşturulmamış.");
+                //ModelState.AddModelError("", "Bu kullanıcı ile daha önce hesap oluşturulmamış.");
+                ModelState.AddModelError("", "Bu mail ile daha önce hesap oluşturulmamış.");
                 return View(model);
             }
 
             //3.parametre true : cookie yaşam süresi, tarayıcıyı kapatmış olsan bile (startupda 60dk verdik) cookie devam edicek.
-            var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, true, false);
+            //var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, true, false);
+            var result = await _signInManager.PasswordSignInAsync(user, model.Password, true, false);
 
             if (result.Succeeded)
             {
-                return Redirect(returnUrl);
+                return Redirect(model.ReturnUrl ?? "~/");
             }
 
-            ModelState.AddModelError("", "Kullanıcı adı ve ya parola yanlış");
+            //ModelState.AddModelError("", "Kullanıcı adı ve ya parola yanlış");
+            ModelState.AddModelError("", "Mail ya da parola yanlış");
             return View(model);
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return Redirect("~/");
         }
 
     }
