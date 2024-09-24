@@ -57,7 +57,8 @@ namespace ShopApp.WebUI
                 options.User.RequireUniqueEmail = true;
 
                 //kullanıcı mail confirm şimdilik false cekiyoruz daha sonradan kullanıcıya mail gönderip hesabını onaylamasını söyleyeceğiz.
-                options.SignIn.RequireConfirmedEmail = false;
+                //options.SignIn.RequireConfirmedEmail = false;
+                options.SignIn.RequireConfirmedEmail = true;
                 options.SignIn.RequireConfirmedPhoneNumber = false;
             });
 
