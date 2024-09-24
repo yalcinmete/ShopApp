@@ -9,12 +9,12 @@ namespace ShopApp.WebUI.EmailServices
     public class EmailSender : IEmailSender
     {
         //Apı key
-        private const string SendGridKey = " ";
+        //private const string SendGridKey = " ";
         public async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
             
-            var apiKey = SendGridKey;
-            var client = new SendGridClient(SendGridKey);
+            var apiKey = "SG.jb5TUYAZSZ28H - z3b3TiuQ.PycF1_TslXKGIGjLheqx01Jz0lM0PJgNouih0O4fSr4";
+            var client = new SendGridClient("SG.jb5TUYAZSZ28H - z3b3TiuQ.PycF1_TslXKGIGjLheqx01Jz0lM0PJgNouih0O4fSr4");
             var from = new EmailAddress("yalcinmete.g4@gmail.com", "Shop App");
             var subject2 = subject;
             var to = new EmailAddress("yalcinmete.g4@gmail.com", "Yalcin Mete");
