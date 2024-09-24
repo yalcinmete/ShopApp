@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace ShopApp.WebUI.Controllers
 {
+    [AutoValidateAntiforgeryToken] //Actionların başına [ValidateAntiForgeryToken] yazmak yerine controllerin başına bu şekilde token kontrolünü ekleyebilirsin.Böylece GET metodu haric Post metotlarının hepsi token kontrolünü yapar.
     public class AccountController : Controller
     {
         private UserManager<ApplicationUser> _userManager;
@@ -24,6 +25,7 @@ namespace ShopApp.WebUI.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterModel model)
         {
             if (!ModelState.IsValid)
@@ -64,6 +66,7 @@ namespace ShopApp.WebUI.Controllers
 
 
         [HttpPost]
+        
         public async Task<IActionResult> Login(LoginModel model)
         {
 
