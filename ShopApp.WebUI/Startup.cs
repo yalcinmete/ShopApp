@@ -86,8 +86,11 @@ namespace ShopApp.WebUI
             //services.AddScoped<IProductDal, MemoryProductDal>();  //IProductDal teknolojisi değişirse ,
             services.AddScoped<IProductDal, EfCoreProductDal>();  //IProductDal teknolojisi değişirse ,
             services.AddScoped<ICategoryDal, EfCoreCategoryDal>();  //IProductDal teknolojisi değişirse ,
+            services.AddScoped<ICartDal, EfCoreCartDal>();
+
             services.AddScoped<IProductService, ProductManager>(); //IProductService business katmanı değişirse,
             services.AddScoped<ICategoryService, CategoryManager>(); //IProductService business katmanı değişirse,
+            services.AddScoped<ICartService, CartManager>(); 
 
             services.AddTransient<IEmailSender, EmailSender>();
 

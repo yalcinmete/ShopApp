@@ -7,6 +7,7 @@ using ShopApp.WebUI.Identity;
 using ShopApp.WebUI.Models;
 using System.Threading.Tasks;
 using ShopApp.WebUI.Models;
+using ShopApp.Business.Abstract;
 
 namespace ShopApp.WebUI.Controllers
 {
@@ -16,12 +17,14 @@ namespace ShopApp.WebUI.Controllers
         private UserManager<ApplicationUser> _userManager;
         private SignInManager<ApplicationUser> _signInManager;
         private IEmailSender _emailSender;
+        private ICartService _cartService;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailSender emailSender)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailSender emailSender, ICartService cartService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
+            _cartService = cartService;
         }
 
         [HttpGet]
@@ -60,7 +63,7 @@ namespace ShopApp.WebUI.Controllers
                 });
 
                 // send email
-                await _emailSender.SendEmailAsync(model.Email, "Hesabınızı onaylayınız", $"Lütfen hesabınızı onaylamak için linke <a href='http://localhost:9840{callbackUrl}'> tıklayınız.</a>");
+                await _emailSender.SendEmailAsync(model.Email, "Hesabınızı onaylayınız", $"Lütfen hesabınızı onaylamak için linke <a href='http://localhost:9440{callbackUrl}'> tıklayınız.</a>");
                 return RedirectToAction("Login", "Account");
             }
 
@@ -162,6 +165,9 @@ namespace ShopApp.WebUI.Controllers
                 var result = await _userManager.ConfirmEmailAsync(user, token);
                 if (result.Succeeded)
                 {
+                    //create cart object
+                    _cartService.InitializeCart(user.Id);
+
                     //TempData["message"] = "Hesabınız onaylandı";
                     TempData.Put("message", new ResultMessage()
                     {
@@ -227,7 +233,7 @@ namespace ShopApp.WebUI.Controllers
             });
 
             // send email
-            await _emailSender.SendEmailAsync(Email, "Reset Password", $"Parolanızı yenilemek için linke <a href='http://localhost:9840{callbackUrl}'>tıklayınız.</a>");
+            await _emailSender.SendEmailAsync(Email, "Reset Password", $"Parolanızı yenilemek için linke <a href='http://localhost:9440{callbackUrl}'>tıklayınız.</a>");
 
             TempData.Put("message", new ResultMessage()
             {
