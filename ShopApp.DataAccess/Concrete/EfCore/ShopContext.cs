@@ -12,6 +12,7 @@ namespace ShopApp.DataAccess.Concrete.EfCore
         public DbSet<Category> Categories { get; set; }
 
         public DbSet<Cart>  Carts { get; set; }
+        public DbSet<Order> Orders { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
