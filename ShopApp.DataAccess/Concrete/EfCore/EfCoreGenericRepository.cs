@@ -10,7 +10,7 @@ namespace ShopApp.DataAccess.Concrete.EfCore
 {
     public class EfCoreGenericRepository<T, TContext> : IRepository<T> where T : class where TContext : DbContext, new()
     {
-        public void Create(T entity)
+        public virtual void Create(T entity)
         {
             using (var context = new TContext())
             {
@@ -19,7 +19,7 @@ namespace ShopApp.DataAccess.Concrete.EfCore
             }
         }
 
-        public void Delete(T entity)
+        public virtual void Delete(T entity)
         {
             using (var context = new TContext())
             {
@@ -30,7 +30,7 @@ namespace ShopApp.DataAccess.Concrete.EfCore
 
         //IQueryable<T> de çağırabilirsin ama implemente ettiği classta toList() i çağırmak zorundasın.Biz bu zorunlugu kaldırmak için burada IEnumerable döndürüp tolist()i burada çağırıyoruz.
         //public IQueryable<T> GetAll(Expression<Func<T, bool>> filter = null)
-        public List<T> GetAll(Expression<Func<T, bool>> filter = null)
+        public virtual List<T> GetAll(Expression<Func<T, bool>> filter = null)
         {
             using (var context = new TContext())
             {
@@ -40,7 +40,7 @@ namespace ShopApp.DataAccess.Concrete.EfCore
             }
         }
 
-        public T GetById(int id)
+        public virtual T GetById(int id)
         {
             using (var context = new TContext())
             {
@@ -48,7 +48,7 @@ namespace ShopApp.DataAccess.Concrete.EfCore
             }
         }
 
-        public T GetOne(Expression<Func<T, bool>> filter)
+        public virtual T GetOne(Expression<Func<T, bool>> filter)
         {
             using (var context = new TContext())
             {
@@ -56,7 +56,8 @@ namespace ShopApp.DataAccess.Concrete.EfCore
             }
         }
 
-        public void Update(T entity)
+        //Update metodu ile Class(Model) içindeki propertler için update işlemi yapabiliyoruz ama bir alt propertyler için update burada çalışmaz.İlişkili datalarda Entry() çalışmıyor. Bu nedenle ya yeni bir update metodu oluşturacağız ya da virtual anahtar kelimesini ekleyerek bu metodu ezebileceğimizi ifade ediyoruz. 
+        public virtual void Update(T entity)
         {
             using (var context = new TContext())
             {
