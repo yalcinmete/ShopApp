@@ -87,10 +87,12 @@ namespace ShopApp.WebUI
             services.AddScoped<IProductDal, EfCoreProductDal>();  //IProductDal teknolojisi değişirse ,
             services.AddScoped<ICategoryDal, EfCoreCategoryDal>();  //IProductDal teknolojisi değişirse ,
             services.AddScoped<ICartDal, EfCoreCartDal>();
+            services.AddScoped<IOrderDal, EfCoreOrderDal>();
 
             services.AddScoped<IProductService, ProductManager>(); //IProductService business katmanı değişirse,
             services.AddScoped<ICategoryService, CategoryManager>(); //IProductService business katmanı değişirse,
             services.AddScoped<ICartService, CartManager>(); 
+            services.AddScoped<IOrderService, OrderManager>();
 
             services.AddTransient<IEmailSender, EmailSender>();
 
@@ -131,6 +133,12 @@ namespace ShopApp.WebUI
                     name: "cart",
                     template: "cart",
                     defaults: new { controller = "Cart", action = "Index" });
+
+
+                routes.MapRoute(
+                    name: "orders",
+                    template: "orders",
+                    defaults: new { controller = "Cart", action = "GetOrders" });
 
                 routes.MapRoute(
                     name: "checkout",

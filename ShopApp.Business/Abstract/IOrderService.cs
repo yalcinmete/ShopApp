@@ -3,10 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ShopApp.DataAccess.Abstract
+namespace ShopApp.Business.Abstract
 {
-    public interface IOrderDal : IRepository<Order>
+    public interface IOrderService
     {
+        void Create(Order entity);
+
         List<Order> GetOrders(string userId);
     }
 }
